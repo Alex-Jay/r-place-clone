@@ -1,0 +1,23 @@
+{
+  "name": "r-place-clone",
+  "version": "1.0.0",
+  "description": "A clone of Reddits' /r/place subreddit social experiment. A game where you place a pixel on a million pixel canvas every 5-15 mins.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alex-Jay/r-place-clone.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Alex-Jay/r-place-clone/issues"
+  },
+  "homepage": "https://github.com/Alex-Jay/r-place-clone#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^3.0.0"
+  }
+}

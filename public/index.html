@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>r/place clone</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/js/place.js"></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="/css/main.css"
+    />
+  </head>
+
+  <body>
+    <div class="controls">
+      <label for="x-coord">
+        Y:
+        <input type="number" min="0" max="50" id="x-coord" />
+      </label>
+      <br />
+      <label for="y-coord">
+        X:
+        <input type="number" min="0" max="50" id="y-coord" />
+      </label>
+      <br />
+      <label for="color">
+        Color:
+        <input type="color" id="color" />
+      </label>
+      <br />
+      <button id="submit">Place Color</button>
+    </div>
+    <br />
+    <canvas id="place" height="500" width="500"></canvas>
+  </body>
+</html>
