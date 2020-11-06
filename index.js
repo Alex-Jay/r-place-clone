@@ -1,31 +1,33 @@
 
-const express = require('express'),
-    app = express(),
-    server = require('http').createServer(app),
-    io = require('socket.io')(server);
+// const express = require('express'),
+//     app = express(),
+//     server = require('http').createServer(app),
+//     io = require('socket.io')(server);
 
-const CANVAS_ROWS = 50;
-const CANVAS_COLS = 50;
+// // console.log(firebase);
 
-var canvas = [];
+// const CANVAS_ROWS = 50;
+// const CANVAS_COLS = 50;
 
-for(let rows = 0; rows < CANVAS_ROWS; rows++) {
-    canvas[rows] = [];
-    for(let cols = 0; cols < CANVAS_COLS; cols++) {
-        canvas[rows][cols] = '#FFFFFF';
-    }
-}
+// var canvas = [];
 
-app.use(express.static("public"));
+// for(let rows = 0; rows < CANVAS_ROWS; rows++) {
+//     canvas[rows] = [];
+//     for(let cols = 0; cols < CANVAS_COLS; cols++) {
+//         canvas[rows][cols] = '#FFFFFF';
+//     }
+// }
 
-io.on('connection', socket => {
-    console.log('Connection successful');
-    socket.emit('canvas', canvas);
+// app.use(express.static("public"));
 
-    socket.on('color', data => {
-        canvas[data.row - 1][data.col - 1] = data.color;
-        io.emit('canvas', canvas);
-    })
-});
+// io.on('connection', socket => {
+//     console.log('Connection successful');
+//     socket.emit('canvas', canvas);
 
-server.listen(3000);
+//     socket.on('color', data => {
+//         canvas[data.row - 1][data.col - 1] = data.color;
+//         io.emit('canvas', canvas);
+//     })
+// });
+
+// server.listen(3000);

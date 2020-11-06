@@ -5,37 +5,72 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>r/place clone</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="/js/place.js"></script>
     <link
       rel="stylesheet"
       type="text/css"
       media="screen"
       href="/css/main.css"
     />
+    <title>r/place clone</title>
   </head>
-
   <body>
-    <div class="controls">
-      <label for="x-coord">
-        Y:
-        <input type="number" min="0" max="50" id="x-coord" />
-      </label>
+    <section id="whenSignedOut">
+      <button id="signInBtn">Sign in with Google</button>
+    </section>
+    <section id="whenSignedIn" hidden=true>
+      <div id="userDetails"></div>
+      <br>
+      <div class="controls">
+        <label for="x-coord">
+          Y:
+          <input type="number" min="0" max="50" id="x-coord" />
+        </label>
+        <br />
+        <label for="y-coord">
+          X:
+          <input type="number" min="0" max="50" id="y-coord" />
+        </label>
+        <br />
+        <label for="color">
+          Color:
+          <input type="color" id="color" />
+        </label>
+        <br />
+        <button id="submit">Place Color</button>
+      </div>
       <br />
-      <label for="y-coord">
-        X:
-        <input type="number" min="0" max="50" id="y-coord" />
-      </label>
-      <br />
-      <label for="color">
-        Color:
-        <input type="color" id="color" />
-      </label>
-      <br />
-      <button id="submit">Place Color</button>
-    </div>
-    <br />
-    <canvas id="place" height="500" width="500"></canvas>
+      <canvas id="place" height="500" width="500"></canvas>
+      <br>
+      <button id="signOutBtn">Sign out</button>
+    </section>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      var firebaseConfig = {
+        apiKey: "AIzaSyDQrDnVBQanwDVDLeSBGx5UF21ZrM1iMmk",
+        authDomain: "r-place-clone-797b8.firebaseapp.com",
+        databaseURL: "https://r-place-clone-797b8.firebaseio.com",
+        projectId: "r-place-clone-797b8",
+        storageBucket: "r-place-clone-797b8.appspot.com",
+        messagingSenderId: "110127680560",
+        appId: "1:110127680560:web:af5aa4c49595eda51cf1f5",
+        measurementId: "G-9QPL38ZPHV",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+    </script>
+    <script src="/js/place.js"></script>
   </body>
 </html>
