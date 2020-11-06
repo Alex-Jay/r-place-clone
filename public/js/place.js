@@ -14,11 +14,11 @@ const db = firebase.firestore();
 let fakeCounter = 0;
 
 const addColor = document.getElementById("submit");
-const colorList = document.getElementById("colorList");
 
 let colorsRef;
 let unsubscribe;
 
+let canvasData = [];
 let canvas = $("#place")[0];
 let ctx = canvas.getContext("2d");
 
@@ -26,7 +26,7 @@ signInBtn.onclick = () => auth.signInWithPopup(provider);
 
 signOutBtn.onclick = () => auth.signOut();
 
-auth.onAuthStateChanged(async user => {
+auth.onAuthStateChanged(async (user) => {
   if (user) {
     whenSignedIn.hidden = false;
     whenSignedOut.hidden = true;
@@ -35,13 +35,15 @@ auth.onAuthStateChanged(async user => {
     colorsRef = db.collection("colors");
 
     const snapshot = await colorsRef.get();
-    const items = [];
 
-    snapshot.forEach(doc => {
-      items.push(`<li>UID: ${user.uid}<br>${doc.data().color}<br>${doc.data().coordinates}<br>${doc.data().placedAt}<br>Has VIP?: ${doc.data().isVip}</li>`);
+    snapshot.forEach((doc) => {
+      canvasData.push({
+        coordinates: doc.data().coordinates,
+        color: doc.data().color,
+      });
     });
 
-    colorList.innerHTML = items.join('');
+    redrawCanvas();
 
     addColor.onclick = () => {
       const { serverTimestamp } = firebase.firestore.FieldValue;
@@ -50,20 +52,27 @@ auth.onAuthStateChanged(async user => {
         uid: user.uid,
         color: $("#color").val(),
         placedAt: serverTimestamp(),
-        coordinates: [parseInt($("#x-coord").val()), parseInt($("#y-coord").val())],
+        coordinates: [
+          parseInt($("#x-coord").val()),
+          parseInt($("#y-coord").val()),
+        ],
         isVip: false,
       });
 
       fakeCounter++;
 
-      unsubscribe = colorsRef
-        .onSnapshot((querySnapshot) => {
-          const items = querySnapshot.docs.map((doc) => {
-            return `<li>UID: ${user.uid}<br>${doc.data().color}<br>${doc.data().coordinates}<br>${doc.data().placedAt}<br>Has VIP?: ${doc.data().isVip}</li>`;
-          });
+      unsubscribe = colorsRef.onSnapshot((querySnapshot) => {
+        //On Change
+        redrawCanvas();
 
-          colorList.innerHTML = items.join('');
+        querySnapshot.docs.forEach(doc => {
+          canvasData = [];
+          canvasData.push({
+            coordinates: doc.data().coordinates,
+            color: doc.data().color,
+          });
         });
+      });
     };
   } else {
     whenSignedIn.hidden = true;
@@ -71,27 +80,13 @@ auth.onAuthStateChanged(async user => {
   }
 });
 
-// $(document).ready(() => {
-//   var socket = io();
-
-//   var canvas = $("#place")[0];
-//   var ctx = canvas.getContext("2d");
-
-//   socket.on("canvas", (canvasData) => {
-//     canvasData.forEach((row, rowIndex) => {
-//       row.forEach((col, colIndex) => {
-//         ctx.fillStyle = col;
-//         ctx.fillRect(colIndex * 10, rowIndex * 10, 10, 10);
-//       });
-//     });
-//   });
-
-//   $("#submit").click(() => {
-//     socket.emit("color", {
-//       col: parseInt($("#x-coord").val()),
-//       row: parseInt($("#y-coord").val()),
-//       color: $("#color").val(),
-//     });
-//     //console.log(pixelData);
-//   });
-// });
+function redrawCanvas() {
+  let canvasDataSize = Object.keys(canvasData).length;
+  if (canvasDataSize > 0) {
+    canvasData.forEach((data, index, array) => {
+      console.log(data);
+      ctx.fillStyle = data.color;
+      ctx.fillRect(data.coordinates[0] * 10, data.coordinates[1] * 10, 10, 10);
+    });
+  }
+}
