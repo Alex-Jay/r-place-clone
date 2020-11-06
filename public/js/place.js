@@ -19,17 +19,29 @@ const colorList = document.getElementById("colorList");
 let colorsRef;
 let unsubscribe;
 
+let canvas = $("#place")[0];
+let ctx = canvas.getContext("2d");
+
 signInBtn.onclick = () => auth.signInWithPopup(provider);
 
 signOutBtn.onclick = () => auth.signOut();
 
-auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged(async user => {
   if (user) {
     whenSignedIn.hidden = false;
     whenSignedOut.hidden = true;
     userDetails.innerHTML = `<h3>Welcome ${user.displayName}! </h3><p>User ID: ${user.uid}</p>`;
 
     colorsRef = db.collection("colors");
+
+    const snapshot = await colorsRef.get();
+    const items = [];
+
+    snapshot.forEach(doc => {
+      items.push(`<li>UID: ${user.uid}<br>${doc.data().color}<br>${doc.data().coordinates}<br>${doc.data().placedAt}<br>Has VIP?: ${doc.data().isVip}</li>`);
+    });
+
+    colorList.innerHTML = items.join('');
 
     addColor.onclick = () => {
       const { serverTimestamp } = firebase.firestore.FieldValue;
@@ -39,13 +51,12 @@ auth.onAuthStateChanged((user) => {
         color: $("#color").val(),
         placedAt: serverTimestamp(),
         coordinates: [parseInt($("#x-coord").val()), parseInt($("#y-coord").val())],
-        isVip: Math.random() >= 0.5,
+        isVip: false,
       });
 
       fakeCounter++;
 
       unsubscribe = colorsRef
-        .where("uid", "==", user.uid)
         .onSnapshot((querySnapshot) => {
           const items = querySnapshot.docs.map((doc) => {
             return `<li>UID: ${user.uid}<br>${doc.data().color}<br>${doc.data().coordinates}<br>${doc.data().placedAt}<br>Has VIP?: ${doc.data().isVip}</li>`;
