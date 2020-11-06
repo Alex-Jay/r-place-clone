@@ -27,6 +27,8 @@ signInBtn.onclick = () => auth.signInWithPopup(provider);
 signOutBtn.onclick = () => auth.signOut();
 
 auth.onAuthStateChanged(async (user) => {
+  const { serverTimestamp } = firebase.firestore.FieldValue;
+
   if (user) {
     whenSignedIn.hidden = false;
     whenSignedOut.hidden = true;
@@ -46,8 +48,6 @@ auth.onAuthStateChanged(async (user) => {
     redrawCanvas();
 
     addColor.onclick = () => {
-      const { serverTimestamp } = firebase.firestore.FieldValue;
-
       colorsRef.add({
         uid: user.uid,
         color: $("#color").val(),
@@ -62,10 +62,17 @@ auth.onAuthStateChanged(async (user) => {
       fakeCounter++;
 
       unsubscribe = colorsRef.onSnapshot((querySnapshot) => {
-        //On Change
-        redrawCanvas();
+        querySnapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            updatePixel(
+              change.doc.data().coordinates[0],
+              change.doc.data().coordinates[1],
+              change.doc.data().color
+            );
+          }
+        });
 
-        querySnapshot.docs.forEach(doc => {
+        querySnapshot.docs.forEach((doc) => {
           canvasData = [];
           canvasData.push({
             coordinates: doc.data().coordinates,
@@ -84,9 +91,13 @@ function redrawCanvas() {
   let canvasDataSize = Object.keys(canvasData).length;
   if (canvasDataSize > 0) {
     canvasData.forEach((data, index, array) => {
-      console.log(data);
       ctx.fillStyle = data.color;
       ctx.fillRect(data.coordinates[0] * 10, data.coordinates[1] * 10, 10, 10);
     });
   }
+}
+
+function updatePixel(x, y, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x * 10, y * 10, 10, 10);
 }
