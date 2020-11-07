@@ -11,13 +11,13 @@ const GameScreen = () => {
     <AuthUserContext.Consumer>
       {(authUser) =>
         authUser ? (
-          <div className="game-screen">
+          <div className="game-screen-signed-in">
             <GameControls />
             <GameCanvas />
             <LogoutUser />
           </div>
         ) : (
-          <div className="game-screen">
+          <div className="game-screen-signed-out">
             <LoginUser />
           </div>
         )
