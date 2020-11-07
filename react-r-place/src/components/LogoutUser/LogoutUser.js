@@ -1,4 +1,5 @@
 import React from 'react';
+import { withFirebase } from '../Firebase';
 import './LogoutUser.css';
 import { Button } from "@material-ui/core";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -15,14 +16,15 @@ const theme = createMuiTheme({
   },
 });
 
-const LogoutUser = () => (
+const LogoutUser = ({ firebase }) => (
   <div className="LogoutUser">
     <ThemeProvider theme={theme}>
-      <Button variant="contained" color="primary">
+      <Button onClick={firebase.doSignOut} variant="contained" color="primary">
         <ExitToAppIcon />&nbsp;Logout
       </Button>
     </ThemeProvider>
   </div>
 );
 
-export default LogoutUser;
+export default withFirebase(LogoutUser);
+

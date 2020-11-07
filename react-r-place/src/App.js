@@ -1,16 +1,43 @@
 import "./App.css";
-import LoginUser from "./components/LoginUser/LoginUser";
+import React from "react";
+import { withFirebase } from "./components/Firebase";
 import GameScreen from "./components/GameScreen/GameScreen";
+import { AuthUserContext } from "./components/Session";
 
-function App() {
-  return (
-    <div className="App">
-      <div class="App-Wrapper">
-        <LoginUser />
-        <GameScreen />
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      authUser: null,
+    };
+  }
+
+  componentDidMount() {
+    this.listener = this.props.firebase.auth.onAuthStateChanged((authUser) => {
+      console.log(authUser);
+
+      authUser
+        ? this.setState({ authUser })
+        : this.setState({ authUser: null });
+    });
+  }
+
+  componentWillUnmount() {
+    this.listener();
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <div className="App-Wrapper">
+          <AuthUserContext.Provider value={this.state.authUser}>
+            <GameScreen/>
+          </AuthUserContext.Provider>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
-export default App;
+export default withFirebase(App);

@@ -1,4 +1,5 @@
 import React from "react";
+import { withFirebase } from '../Firebase';
 import "./GoogleAuthButton.css";
 import { Button } from "@material-ui/core";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
@@ -15,14 +16,17 @@ const theme = createMuiTheme({
   },
 });
 
-const GoogleAuthButton = () => (
-  <div className="GoogleAuthButton">
-    <ThemeProvider theme={theme}>
-      <Button variant="contained" color="primary">
-        <VpnKeyIcon />&nbsp;Login with Google
-      </Button>
-    </ThemeProvider>
-  </div>
-);
+const GoogleAuthButton = ({firebase}) => {
+  return (
+    <div className="GoogleAuthButton">
+      <ThemeProvider theme={theme}>
+        <Button onClick={firebase.doSignInWithGoogleProvider} variant="contained" color="primary">
+          <VpnKeyIcon />
+          &nbsp;Login with Google
+        </Button>
+      </ThemeProvider>
+    </div>
+  );
+};
 
-export default GoogleAuthButton;
+export default withFirebase(GoogleAuthButton);
